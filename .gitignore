@@ -16,8 +16,13 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+.idea/
+.vscode/
+node_modules/
+build/
+tmp/
+temp/
+__pycache__/
 
 # Go workspace file
 go.work
-
-.idea/

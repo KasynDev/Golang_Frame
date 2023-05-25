@@ -2,7 +2,6 @@ package settings
 
 import (
 	"fmt"
-
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 )
@@ -55,8 +54,9 @@ func Init(configPath string) (err error) {
 	}
 
 	// 把读取到的配置信息反序列化到Conf变量中
-	if err := viper.Unmarshal(Conf); err != nil {
+	if err := viper.Unmarshal(&Conf); err != nil {
 		fmt.Printf("viper.Unmarshal failed, err: %v\n", err)
+		return err
 	}
 
 	// 监控配置文件变化（热加载）

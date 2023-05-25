@@ -32,14 +32,18 @@ func main() {
 	// 1. 加载配置
 	if err := settings.Init(configPath); err != nil {
 		fmt.Printf("init settings failed, err:%v\n", err)
-		fmt.Println("If your config file is not in the current directory, " +
+
+		zap.L().Error("init settings failed", zap.Error(err))
+		zap.L().Info("If your config file is not in the current directory, " +
 			"please use the -C option to specify the configuration file path.")
 		return
 	}
+	zap.L().Debug("settings init success...")
 
 	// 2. 初始化日志
 	if err := logger.Init(settings.Conf.LogConfig); err != nil {
 		fmt.Printf("init logger failed, err:%v\n", err)
+		zap.L().Error("init logger failed", zap.Error(err))
 		return
 	}
 	zap.L().Debug("logger init success...")
@@ -48,15 +52,19 @@ func main() {
 	// 3. 初始化Mysql
 	if err := mysql.Init(settings.Conf.MySQLConfig); err != nil {
 		fmt.Printf("init mysql failed, err:%v\n", err)
+		zap.L().Error("init mysql failed", zap.Error(err))
 		return
 	}
+	zap.L().Debug("mysql init success...")
 	defer mysql.Close() // 程序退出关闭数据库连接
 
 	// 4. 初始化Redis
 	if err := redis.Init(settings.Conf.RedisConfig); err != nil {
 		fmt.Printf("init redis failed, err:%v\n", err)
+		zap.L().Error("init redis failed", zap.Error(err))
 		return
 	}
+	zap.L().Debug("redis init success...")
 	defer redis.Close() // 程序退出关闭redis连接
 
 	// 5. 注册路由
@@ -70,7 +78,7 @@ func main() {
 	go func() {
 		// 开启一个goroutine启动服务
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatalf("listen: %s\n", err)
+			log.Fatalf("listen: %s\n", err) // 服务启动失败
 		}
 	}()
 

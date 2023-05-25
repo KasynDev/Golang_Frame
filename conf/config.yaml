@@ -16,7 +16,7 @@ mysql:
   port: 3306
   user: "root"
   password: "root"
-  dbname: "sql_demo"
+  db_name: "sql_demo"
   max_open_conns: 200
   max_idle_conns: 50
 
