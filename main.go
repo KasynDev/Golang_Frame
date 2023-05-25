@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"go_frame/dao/mysql"
 	"go_frame/dao/redis"
@@ -23,30 +24,41 @@ import (
 // Go Web开发较通用的脚手架模板
 
 func main() {
+	// 0. 读取命令行参数
+	var configPath string
+	flag.StringVar(&configPath, "C", "./conf/config.yaml", "The path of config file.")
+	flag.Parse() // 解析命令行参数
+
 	// 1. 加载配置
-	if err := settings.Init(); err != nil {
+	if err := settings.Init(configPath); err != nil {
 		fmt.Printf("init settings failed, err:%v\n", err)
+		fmt.Println("If your config file is not in the current directory, " +
+			"please use the -C option to specify the configuration file path.")
 		return
 	}
+
 	// 2. 初始化日志
-	if err := logger.Init(); err != nil {
+	if err := logger.Init(settings.Conf.LogConfig); err != nil {
 		fmt.Printf("init logger failed, err:%v\n", err)
 		return
 	}
 	zap.L().Debug("logger init success...")
 	defer zap.L().Sync() // 把缓冲区的日志追加到文件中
+
 	// 3. 初始化Mysql
-	if err := mysql.Init(); err != nil {
+	if err := mysql.Init(settings.Conf.MySQLConfig); err != nil {
 		fmt.Printf("init mysql failed, err:%v\n", err)
 		return
 	}
 	defer mysql.Close() // 程序退出关闭数据库连接
+
 	// 4. 初始化Redis
-	if err := redis.Init(); err != nil {
+	if err := redis.Init(settings.Conf.RedisConfig); err != nil {
 		fmt.Printf("init redis failed, err:%v\n", err)
 		return
 	}
 	defer redis.Close() // 程序退出关闭redis连接
+
 	// 5. 注册路由
 	r := routes.SetUp()
 	// 6. 启动服务（优雅关机）
