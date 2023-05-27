@@ -1,7 +1,7 @@
 # Golang_Frame
 一个Go Web开发的框架，使用gin进行搭建，完成了结构化参数配置，日志打印，优雅关机和平滑重启等设置，更改config.yaml配置后可开箱即用
 
-
+**Reference:** https://study.163.com/course/introduction.htm?courseId=1210171207&_trace_c_p_k2_=c517e78770ec4af68621b6f9d1d03a46
 
 ## 框架简介
 
@@ -10,8 +10,6 @@
 3. 利用zap日志库建立日志信息输出
 4. 使用viper库加载配置信息，并使用结构体变量优化
 5. 实现优雅关机和平滑重启
-
-
 
 ## 文件目录
 
@@ -29,8 +27,6 @@ Golang_Frame
 ├─routes         // 配置路由
 └─settings       // 映射配置信息
 ```
-
-
 
 ## 项目启动
 
@@ -66,8 +62,6 @@ redis:                           // redis信息
   db: 0                          // 选择数据库
   pool_size: 100                 // 连接池大小
 ```
-
-
 
 配置完成之后，使用
 
